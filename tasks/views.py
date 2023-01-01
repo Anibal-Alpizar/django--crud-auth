@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -35,11 +35,10 @@ def signup(request):
             "error" : "Password do not match"
         })
 
+def signout(request):
+    logout(request) 
+    return redirect('home')
+
 def tasks(request):
     return render(request, 'tasks.html')
 
-
-
-
-
-    
