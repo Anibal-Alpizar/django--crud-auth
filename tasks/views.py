@@ -127,4 +127,4 @@ def delete_task(request, task_id):
     task = get_object_or_404(Task, pk=task_id, user=request.user)
     if(request.method == 'POST'):
         task.delete()
-        return redirect('tasks') 
+        return redirect('tasks_completed') 
