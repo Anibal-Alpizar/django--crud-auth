@@ -74,8 +74,7 @@ def create_task(request):
             new_task = form.save(commit=False)
             new_task.user = request.user
             new_task.save()
-            print(new_task)
-            return render(request, 'tasks.html') 
+            return redirect('tasks') 
         except ValueError:
             return render(request, 'create_task.html',{
                 'form' : TaskForm,
@@ -83,9 +82,22 @@ def create_task(request):
             })
 
 def task_detail(request, task_id):
-    task = get_object_or_404(Task, pk=task_id)
-    form = TaskForm(instance=task)
-    return render(request, 'task_detail.html',{
+    if request.method == 'GET':
+        task = get_object_or_404(Task, pk=task_id, user=request.user)
+        form = TaskForm(instance=task)
+        return render(request, 'task_detail.html',{
         'task' : task,
         'form' : form
-    })
+        })
+    else:
+        try:
+            task = get_object_or_404(Task, pk=task_id, user=request.user)
+            form = TaskForm(request.POST, instance=task)
+            form.save()
+            return redirect('tasks')
+        except ValueError:
+            return render(request, 'task_detail.html',{
+            'task' : task,
+            'form' : form,
+            'error' : 'Error updating task'
+            })
