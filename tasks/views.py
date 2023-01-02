@@ -1,7 +1,7 @@
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError
 from .forms import TaskForm
 from .models import Task
@@ -81,3 +81,11 @@ def create_task(request):
                 'form' : TaskForm,
                 'error' : 'Please provide valida data'
             })
+
+def task_detail(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    form = TaskForm(instance=task)
+    return render(request, 'task_detail.html',{
+        'task' : task,
+        'form' : form
+    })
